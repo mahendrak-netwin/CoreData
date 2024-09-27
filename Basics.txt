@@ -1,0 +1,35 @@
+
+
+// URL to check the SQLite Database
+
+> Go to Persistent File 
+> Add the following code Snippet below the fatal error
+
+ if let url = description.url {
+                print("Core Data DB Path: \(url)")
+            }
+
+// Code For the persistent to for Xcode 12 or above ---------
+
+import CoreData
+
+struct PersistenceController {
+    static let shared = PersistenceController()
+
+    let container: NSPersistentContainer
+
+    init(inMemory: Bool = false) {
+        container = NSPersistentContainer(name: "Core_data_01") // Match this with your model name
+        if inMemory {
+            let storeDescription = NSPersistentStoreDescription()
+            storeDescription.type = NSInMemoryStoreType
+            container.persistentStoreDescriptions = [storeDescription]
+        }
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                // Handle the error appropriately
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+    }
+}
