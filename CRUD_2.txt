@@ -1,0 +1,73 @@
+
+
+============  C - Create a Record ==========================
+import SwiftUI
+import CoreData
+
+func addNewBook(name: String, publishedYear: Int16, author: String) {
+    let context = PersistenceController.shared.viewContext
+    let newBook = Book(context: context)
+    newBook.name = name
+    newBook.publishedYear = publishedYear
+    newBook.author = author
+    
+    do {
+        try context.save()
+        print("Book saved successfully!")
+    } catch {
+        print("Failed to save book: \(error.localizedDescription)")
+    }
+}
+
+
+
+========== R -  Read a record =============================
+
+func fetchBooks() -> [Book] {
+    let context = PersistenceController.shared.viewContext
+    let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+    
+    do {
+        let books = try context.fetch(fetchRequest)
+        return books
+    } catch {
+        print("Failed to fetch books: \(error.localizedDescription)")
+        return []
+    }
+}
+
+
+========= U - Update =====================================
+
+func fetchBooks(byAuthor author: String) -> [Book] {
+    let context = PersistenceController.shared.viewContext
+    let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "author == %@", author)
+    
+    do {
+        let books = try context.fetch(fetchRequest)
+        return books
+    } catch {
+        print("Failed to fetch books: \(error.localizedDescription)")
+        return []
+    }
+}
+
+
+
+========= D - Delete a record =================================
+
+func deleteBook(book: Book) {
+    let context = PersistenceController.shared.viewContext
+    context.delete(book)
+    
+    do {
+        try context.save()
+        print("Book deleted successfully!")
+    } catch {
+        print("Failed to delete book: \(error.localizedDescription)")
+    }
+}
+
+
+==========================================================================
