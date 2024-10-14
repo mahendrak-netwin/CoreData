@@ -1,0 +1,14 @@
+import CoreData
+
+func fetchAllBooks() -> [Book] {
+    let context = PersistenceController.shared.viewContext
+    let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+    
+    do {
+        let books = try context.fetch(fetchRequest)
+        return books
+    } catch {
+        print("Failed to fetch books: \(error.localizedDescription)")
+        return []
+    }
+}
